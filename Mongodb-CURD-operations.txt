@@ -1,0 +1,511 @@
+Database & Collection Setup
+use studentDB                       // switch to (or create) the database
+db.createCollection("students")     // create the collection explicitly
+show dbs                            // list databases (only shows non-empty ones)
+show collections                    // list collections in current DB
+
+Insert One Document
+test> use studentDB
+switched to db studentDB
+studentDB> db.createCollection("students")
+{ ok: 1 }
+studentDB> db.students.insertOne({
+|     name: "Jayasri",
+|     age: 25,
+|     course: "MERN Stack",
+|     status: "Active"
+| })
+{
+  acknowledged: true,
+  insertedId: ObjectId('6ac16bad1cfb9a3d25139199')
+}
+Insert Multiple Documents
+studentDB> db.students.insertMany([
+|     {
+|         name: "Arun",
+|         age: 23,
+|         course: "Java",
+|         status: "Active"
+|     },
+|     {
+|         name: "Priya",
+|         age: 24,
+|         course: "MERN Stack",
+|         status: "Completed"
+|     },
+|     {
+|         name: "Rahul",
+|         age: 22,
+|         course: "Python",
+|         status: "Active"
+|     },
+|     {
+|         name: "Divya",
+|         age: 26,
+|         course: "AEM",
+|         status: "Completed"
+|     }
+| ])
+{
+  acknowledged: true,
+  insertedIds: {
+    '0': ObjectId('6ac16c001cfb9a3d2513919a'),
+    '1': ObjectId('6ac16c001cfb9a3d2513919b'),
+    '2': ObjectId('6ac16c001cfb9a3d2513919c'),
+    '3': ObjectId('6ac16c001cfb9a3d2513919d')
+  }
+}
+Fetch All Documents
+studentDB> db.students.find()
+[
+  {
+    _id: ObjectId('6ac16bad1cfb9a3d25139199'),
+    name: 'Jayasri',
+    age: 25,
+    course: 'MERN Stack',
+    status: 'Active'
+  },
+  {
+    _id: ObjectId('6ac16c001cfb9a3d2513919a'),
+    name: 'Arun',
+    age: 23,
+    course: 'Java',
+    status: 'Active'
+  },
+  {
+    _id: ObjectId('6ac16c001cfb9a3d2513919b'),
+    name: 'Priya',
+    age: 24,
+    course: 'MERN Stack',
+    status: 'Completed'
+  },
+  {
+    _id: ObjectId('6ac16c001cfb9a3d2513919c'),
+    name: 'Rahul',
+    age: 22,
+    course: 'Python',
+    status: 'Active'
+  },
+  {
+    _id: ObjectId('6ac16c001cfb9a3d2513919d'),
+    name: 'Divya',
+    age: 26,
+    course: 'AEM',
+    status: 'Completed' //This satisfies the Insert Operations requirement.
+  }
+]
+In Read Operations:
+Fetch All Documents 
+studentDB> db.students.find({ course: "MERN Stack" })//Find MERN Stack Students in a list
+[
+  {
+    _id: ObjectId('6ac16bad1cfb9a3d25139199'),
+    name: 'Jayasri',
+    age: 25,
+    course: 'MERN Stack',
+    status: 'Active'
+  },
+  {
+    _id: ObjectId('6ac16c001cfb9a3d2513919b'),
+    name: 'Priya',
+    age: 24,
+    course: 'MERN Stack',
+    status: 'Completed'
+  }
+]
+
+studentDB> db.students.find()
+[
+  {
+    _id: ObjectId('6ac16bad1cfb9a3d25139199'),
+    name: 'Jayasri',
+    age: 25,
+    course: 'MERN Stack',
+    status: 'Active'
+  },
+  {
+    _id: ObjectId('6ac16c001cfb9a3d2513919a'),
+    name: 'Arun',
+    age: 23,
+    course: 'Java',
+    status: 'Active'
+  },
+  {
+    _id: ObjectId('6ac16c001cfb9a3d2513919b'),
+    name: 'Priya',
+    age: 24,
+    course: 'MERN Stack',
+    status: 'Completed'
+  },
+  {
+    _id: ObjectId('6ac16c001cfb9a3d2513919c'),
+    name: 'Rahul',
+    age: 22,
+    course: 'Python',
+    status: 'Active'
+  },
+  {
+    _id: ObjectId('6ac16c001cfb9a3d2513919d'),
+    name: 'Divya',
+    age: 26,
+    course: 'AEM',
+    status: 'Completed'
+  }
+]
+studentDB> db.students.find({ course: "MERN Stack" })
+[
+  {
+    _id: ObjectId('6ac16bad1cfb9a3d25139199'),
+    name: 'Jayasri',
+    age: 25,
+    course: 'MERN Stack',
+    status: 'Active'
+  },
+  {
+    _id: ObjectId('6ac16c001cfb9a3d2513919b'),
+    name: 'Priya',
+    age: 24,
+    course: 'MERN Stack',
+    status: 'Completed'
+  }
+]
+studentDB> db.students.updateOne(
+|     { name: "Jayasri" },
+|     { $set: { status: "Completed" } } //update one student status
+| )
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 1,
+  modifiedCount: 1,
+  upsertedCount: 0
+}
+studentDB> db.students.find({ name: "Jayasri" })
+[
+  {
+    _id: ObjectId('6ac16bad1cfb9a3d25139199'),
+    name: 'Jayasri',
+    age: 25,
+    course: 'MERN Stack',
+    status: 'Completed'
+  }
+]
+studentDB> db.students.updateMany(
+|     { status: "Active" },
+|     { $set: { status: "Completed" } } //update Multiple Students
+| )
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 2,
+  modifiedCount: 2,
+  upsertedCount: 0
+}
+studentDB> db.students.find()
+[
+  {
+    _id: ObjectId('6ac16bad1cfb9a3d25139199'),
+    name: 'Jayasri',
+    age: 25,
+    course: 'MERN Stack',
+    status: 'Completed'
+  },
+  {
+    _id: ObjectId('6ac16c001cfb9a3d2513919a'),
+    name: 'Arun',
+    age: 23,
+    course: 'Java',
+    status: 'Completed'
+  },
+  {
+    _id: ObjectId('6ac16c001cfb9a3d2513919b'),
+    name: 'Priya',
+    age: 24,
+    course: 'MERN Stack',
+    status: 'Completed'
+  },
+  {
+    _id: ObjectId('6ac16c001cfb9a3d2513919c'),
+    name: 'Rahul',
+    age: 22,
+    course: 'Python',
+    status: 'Completed'
+  },
+  {
+    _id: ObjectId('6ac16c001cfb9a3d2513919d'),
+    name: 'Divya',
+    age: 26,
+    course: 'AEM',
+    status: 'Completed'
+  }
+]
+Query Operators
+studentDB> db.students.find({ age: { $gt: 23 } })
+[
+  {
+    _id: ObjectId('6ac16bad1cfb9a3d25139199'),
+    name: 'Jayasri',
+    age: 25,
+    course: 'MERN Stack',
+    status: 'Completed'
+  },
+  {
+    _id: ObjectId('6ac16c001cfb9a3d2513919b'),
+    name: 'Priya',
+    age: 24,
+    course: 'MERN Stack',
+    status: 'Completed'
+  },
+  {
+    _id: ObjectId('6ac16c001cfb9a3d2513919d'),
+    name: 'Divya',
+    age: 26,
+    course: 'AEM',
+    status: 'Completed'
+  }
+]
+studentDB> db.students.find({ age: { $lt: 25 } })
+[
+  {
+    _id: ObjectId('6ac16c001cfb9a3d2513919a'),
+    name: 'Arun',
+    age: 23,
+    course: 'Java',
+    status: 'Completed'
+  },
+  {
+    _id: ObjectId('6ac16c001cfb9a3d2513919b'),
+    name: 'Priya',
+    age: 24,
+    course: 'MERN Stack',
+    status: 'Completed'
+  },
+  {
+    _id: ObjectId('6ac16c001cfb9a3d2513919c'),
+    name: 'Rahul',
+    age: 22,
+    course: 'Python',
+    status: 'Completed'
+  }
+]
+studentDB> db.students.find({
+|     course: { $in: ["MERN Stack", "AEM"] } //match multiple values
+| })
+[
+  {
+    _id: ObjectId('6ac16bad1cfb9a3d25139199'),
+    name: 'Jayasri',
+    age: 25,
+    course: 'MERN Stack',
+    status: 'Completed'
+  },
+  {
+    _id: ObjectId('6ac16c001cfb9a3d2513919b'),
+    name: 'Priya',
+    age: 24,
+    course: 'MERN Stack',
+    status: 'Completed'
+  },
+  {
+    _id: ObjectId('6ac16c001cfb9a3d2513919d'),
+    name: 'Divya',
+    age: 26,
+    course: 'AEM',
+    status: 'Completed'
+  }
+]
+studentDB> db.students.find({
+|     $and: [
+|         { age: { $gt: 23 } },
+|         { status: "Completed" }
+|     ]
+| })
+[
+  {
+    _id: ObjectId('6ac16bad1cfb9a3d25139199'),
+    name: 'Jayasri',
+    age: 25,
+    course: 'MERN Stack',
+    status: 'Completed'
+  },
+  {
+    _id: ObjectId('6ac16c001cfb9a3d2513919b'),
+    name: 'Priya',
+    age: 24,
+    course: 'MERN Stack',
+    status: 'Completed'
+  },
+  {
+    _id: ObjectId('6ac16c001cfb9a3d2513919d'),
+    name: 'Divya',
+    age: 26,
+    course: 'AEM',
+    status: 'Completed'
+  }
+]
+studentDB> db.students.find({
+|     $or: [
+|         { course: "Java" },
+|         { course: "Python" }
+|     ]
+| })
+[
+  {
+    _id: ObjectId('6ac16c001cfb9a3d2513919a'),
+    name: 'Arun',
+    age: 23,
+    course: 'Java',
+    status: 'Completed'
+  },
+  {
+    _id: ObjectId('6ac16c001cfb9a3d2513919c'),
+    name: 'Rahul',
+    age: 22,
+    course: 'Python',
+    status: 'Completed'
+  }
+]
+studentDB> db.students.updateOne(
+|     { name: "Jayasri" },
+|     { $set: { email: "jayasri@example.com" } }
+| )
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 1,
+  modifiedCount: 1,
+  upsertedCount: 0
+}
+studentDB> db.students.find({
+|     email: { $exists: true }
+| })
+[
+  {
+    _id: ObjectId('6ac16bad1cfb9a3d25139199'),
+    name: 'Jayasri',
+    age: 25,
+    course: 'MERN Stack',
+    status: 'Completed',
+    email: 'jayasri@example.com'
+  }
+]
+studentDB> db.createCollection("books")
+{ ok: 1 }
+studentDB> db.books.insertMany([
+|     {
+|         title: "The Alchemist",
+|         author: "Paulo Coelho",
+|         category: "Fiction",
+|         price: 350,
+|         available: true
+|     },
+|     {
+|         title: "Clean Code",
+|         author: "Robert C. Martin",
+|         category: "Programming",
+|         price: 600,
+|         available: true
+|     },
+|     {
+|         title: "JavaScript Guide",
+|         author: "David Flanagan",
+|         category: "Programming",
+|         price: 500,
+|         available: false
+|     }
+| ])
+{
+  acknowledged: true,
+  insertedIds: {
+    '0': ObjectId('6ac16e5d1cfb9a3d2513919e'),
+    '1': ObjectId('6ac16e5d1cfb9a3d2513919f'),
+    '2': ObjectId('6ac16e5d1cfb9a3d251391a0')
+  }
+}
+studentDB> db.books.find({
+|     category: "Programming"
+| })
+[
+  {
+    _id: ObjectId('6ac16e5d1cfb9a3d2513919f'),
+    title: 'Clean Code',
+    author: 'Robert C. Martin',
+    category: 'Programming',
+    price: 600,
+    available: true
+  },
+  {
+    _id: ObjectId('6ac16e5d1cfb9a3d251391a0'),
+    title: 'JavaScript Guide',
+    author: 'David Flanagan',
+    category: 'Programming',
+    price: 500,
+    available: false
+  }
+]
+studentDB> db.books.updateOne(
+|     { title: "Clean Code" },
+|     { $set: { available: false } }
+| )
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 1,
+  modifiedCount: 1,
+  upsertedCount: 0
+}
+studentDB> db.books.find({ title: "Clean Code" })
+[
+  {
+    _id: ObjectId('6ac16e5d1cfb9a3d2513919f'),
+    title: 'Clean Code',
+    author: 'Robert C. Martin',
+    category: 'Programming',
+    price: 600,
+    available: false
+  }
+]
+In Delete Operations:
+Delete One Document
+studentDB> db.students.deleteOne({
+|     name: "Rahul"
+| })
+{ acknowledged: true, deletedCount: 1 }
+studentDB> db.students.find()
+[
+  {
+    _id: ObjectId('6ac16bad1cfb9a3d25139199'),
+    name: 'Jayasri',
+    age: 25,
+    course: 'MERN Stack',
+    status: 'Completed',
+    email: 'jayasri@example.com'
+  },
+  {
+    _id: ObjectId('6ac16c001cfb9a3d2513919a'),
+    name: 'Arun',
+    age: 23,
+    course: 'Java',
+    status: 'Completed'
+  },
+  {
+    _id: ObjectId('6ac16c001cfb9a3d2513919b'),
+    name: 'Priya',
+    age: 24,
+    course: 'MERN Stack',
+    status: 'Completed'
+  },
+  {
+    _id: ObjectId('6ac16c001cfb9a3d2513919d'),
+    name: 'Divya',
+    age: 26,
+    course: 'AEM',
+    status: 'Completed'
+  }
+]
+Delete All Documents
+studentDB> db.students.deleteMany({})
+{ acknowledged: true, deletedCount: 4 }
+studentDB> db.students.find()
+
+studentDB>
